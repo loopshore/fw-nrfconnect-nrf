@@ -72,6 +72,17 @@ static int socket_timeout_set(int fd)
 	return 0;
 }
 
+static int socket_tls_hostname_set(int fd, const char *host) {
+	if (host) {
+		return setsockopt(fd, SOL_TLS,
+							TLS_HOSTNAME, host,
+							strlen(host));
+	} else {
+		return -EINVAL;
+	}
+}
+
+
 static int socket_sectag_set(int fd, int sec_tag)
 {
 	int err;
@@ -187,6 +198,10 @@ static int client_connect(struct download_client *dl, const char *host,
 	if (dl->proto == IPPROTO_UDP || dl->proto == IPPROTO_DTLS_1_2) {
 		if (!IS_ENABLED(CONFIG_COAP)) {
 			return -EPROTONOSUPPORT;
+		}
+		err = socket_tls_hostname_set(fd, host);
+		if (err) {
+				goto cleanup;
 		}
 	}
 
