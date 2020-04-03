@@ -78,7 +78,7 @@ int fota_download_init(fota_download_callback_t client_callback);
  * @retval -EALREADY If download is already ongoing.
  *                   Otherwise, a negative value is returned.
  */
-int fota_download_start(const char *host, const char *file);
+int fota_download_start(const char *host, const char *file, const struct download_client_cfg *config);
 
 #ifdef __cplusplus
 }

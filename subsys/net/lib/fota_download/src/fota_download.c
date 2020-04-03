@@ -195,13 +195,16 @@ static void download_with_offset(struct k_work *unused)
 	}
 }
 
-int fota_download_start(const char *host, const char *file)
+int fota_download_start(const char *host, const char *file, const struct download_client_cfg *config)
 {
 	int err = -1;
 
-	struct download_client_cfg config = {
-		.sec_tag = -1, /* HTTP */
-	};
+	if(config == NULL) {
+		static struct download_client_cfg conf = {
+			.sec_tag = -1, /* HTTP */
+		};
+		config = &conf;
+	}
 
 	if (host == NULL || file == NULL || callback == NULL) {
 		return -EINVAL;
@@ -241,7 +244,7 @@ int fota_download_start(const char *host, const char *file)
 	}
 #endif /* PM_S1_ADDRESS */
 
-	err = download_client_connect(&dlc, host, &config);
+	err = download_client_connect(&dlc, host, config);
 	if (err != 0) {
 		return err;
 	}
