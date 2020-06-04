@@ -36,9 +36,9 @@ manifest:
   #
   projects:
     - name: zephyr
-      repo-path: fw-nrfconnect-zephyr
+      repo-path: loopshore/sdk-zephyr
       west-commands: scripts/west-commands.yml
-      revision: v2.1.99-ncs1
+      revision: f7361f52d0e7652c1b32efbc7078f81f5082148f
     - name: segger
       revision: 6fcf61606d6012d2c44129edc033f59331e268bc
       path: modules/debug/segger
