@@ -31,14 +31,18 @@ manifest:
       url-base: https://github.com/ARMmbed
     - name: civetweb
       url-base: https://github.com/civetweb
+    - name: loopshore
+      url-base: https://github.com/loopshore
+
 
   # The list of external projects for the nRF Connect SDK.
   #
   projects:
     - name: zephyr
-      repo-path: loopshore/sdk-zephyr
+      repo-path: sdk-zephyr
       west-commands: scripts/west-commands.yml
       revision: f7361f52d0e7652c1b32efbc7078f81f5082148f
+      remote: loopshore
     - name: segger
       revision: 6fcf61606d6012d2c44129edc033f59331e268bc
       path: modules/debug/segger
