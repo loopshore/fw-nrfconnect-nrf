@@ -216,10 +216,7 @@ int fota_download_start(const char *host, const char *file, int sec_tag,
 	int err = -1;
 
 	if(config == NULL) {
-		static struct download_client_cfg conf = {
-			.sec_tag = -1, /* HTTP */
-		};
-		config = &conf;
+		return -EINVAL;
 	}
 
 	if (host == NULL || file == NULL || callback == NULL) {
