@@ -76,9 +76,7 @@ static int socket_sectag_set(int fd, int sec_tag)
 		REQUIRED = 2,
 	};
 
-	// TODO: Fixme
-	LOG_ERR("PEER verification is disabled");
-	verify = NONE;
+	verify = REQUIRED;
 
 	err = setsockopt(fd, SOL_TLS, TLS_PEER_VERIFY, &verify, sizeof(verify));
 	if (err) {
