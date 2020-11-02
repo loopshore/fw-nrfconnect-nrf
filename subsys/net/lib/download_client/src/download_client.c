@@ -16,13 +16,12 @@
 
 LOG_MODULE_REGISTER(download_client, CONFIG_DOWNLOAD_CLIENT_LOG_LEVEL);
 
-#define GET_TEMPLATE                                                       \
-    "GET /%s HTTP/1.1\r\n"                                                 \
-    "Host: %s\r\n"                                                         \
-    "Connection: keep-alive\r\n"                                           \
-    "Range: bytes=%u-%u\r\n"                                               \
-    "%s\r\n"                                                               \
-    "\r\n"
+#define GET_TEMPLATE                                                           \
+	"GET /%s HTTP/1.1\r\n"                                                 \
+	"Host: %s\r\n"                                                         \
+	"Connection: keep-alive\r\n"                                           \
+	"Range: bytes=%u-%u\r\n"                                               \
+	"\r\n"
 
 BUILD_ASSERT(CONFIG_DOWNLOAD_CLIENT_MAX_FRAGMENT_SIZE <=
 		 CONFIG_DOWNLOAD_CLIENT_MAX_RESPONSE_SIZE,
@@ -64,6 +63,17 @@ static int socket_timeout_set(int fd)
 	return 0;
 }
 
+static int socket_tls_hostname_set(int fd, const char *host) {
+	if (host) {
+		return setsockopt(fd, SOL_TLS,
+							TLS_HOSTNAME, host,
+							strlen(host));
+	} else {
+		return -EINVAL;
+	}
+}
+
+
 static int socket_sectag_set(int fd, int sec_tag)
 {
 	int err;
@@ -92,16 +102,6 @@ static int socket_sectag_set(int fd, int sec_tag)
 	}
 
 	return 0;
-}
-
-static int socket_tls_hostname_set(int fd, const char *host) {
-	if (host) {
-		return setsockopt(fd, SOL_TLS,
-				 TLS_HOSTNAME, host,
-				 strlen(host));
-	} else {
-		return -EINVAL;
-	}
 }
 
 static int socket_apn_set(int fd, const char *apn)
@@ -192,16 +192,18 @@ static int resolve_and_connect(int family, const char *host,
 	}
 
 	if (proto == IPPROTO_TLS_1_2) {
-		LOG_INF("Setting up TLS credentials %u", cfg->sec_tag);
+		LOG_INF("Setting up TLS credentials");
 		err = socket_sectag_set(fd, cfg->sec_tag);
 		if (err) {
 			goto cleanup;
 		}
 		err = socket_tls_hostname_set(fd, host);
 		if (err) {
-			goto cleanup;
+				goto cleanup;
 		}
 	}
+
+
 
 	/* Not connected */
 	err = -1;
@@ -278,7 +280,7 @@ static int get_request_send(struct download_client *client)
 
 	len = snprintf(client->buf, CONFIG_DOWNLOAD_CLIENT_MAX_RESPONSE_SIZE,
 		       GET_TEMPLATE, client->file, client->host,
-		       client->progress, off, client->config.extra_header1);
+		       client->progress, off);
 
 	if (len < 0 || len > CONFIG_DOWNLOAD_CLIENT_MAX_RESPONSE_SIZE) {
 		LOG_ERR("Cannot create GET request, buffer too small");
@@ -425,7 +427,7 @@ static int reconnect(struct download_client *dl)
 
 void download_thread(void *client, void *a, void *b)
 {
-	int rc = 0;
+	int rc;
 	size_t len;
 	struct download_client *const dl = client;
 

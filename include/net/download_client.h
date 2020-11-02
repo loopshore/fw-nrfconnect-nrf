@@ -97,9 +97,6 @@ struct download_client_cfg {
 	 *  or NULL to use the default APN.
 	 */
 	const char *apn;
-
-	/* Extra header, to be added to download request */
-	const char *extra_header1;
 };
 
 /**
