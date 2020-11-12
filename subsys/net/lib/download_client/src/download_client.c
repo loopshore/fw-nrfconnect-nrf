@@ -199,10 +199,6 @@ static int client_connect(struct download_client *dl, const char *host,
 		if (!IS_ENABLED(CONFIG_COAP)) {
 			return -EPROTONOSUPPORT;
 		}
-		err = socket_tls_hostname_set(fd, host);
-		if (err) {
-				goto cleanup;
-		}
 	}
 
 	if (dl->proto == IPPROTO_TLS_1_2 || dl->proto == IPPROTO_DTLS_1_2) {
@@ -265,6 +261,10 @@ static int client_connect(struct download_client *dl, const char *host,
 		err = socket_sectag_set(*fd, dl->config.sec_tag);
 		if (err) {
 			goto cleanup;
+		}
+		err = socket_tls_hostname_set(*fd, host);
+		if (err) {
+				goto cleanup;
 		}
 	}
 
