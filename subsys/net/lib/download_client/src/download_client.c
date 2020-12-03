@@ -629,14 +629,14 @@ int download_client_start(struct download_client *client, const char *file,
 	client->offset = 0;
 	client->http.has_header = false;
 
-	if (IS_ENABLED(CONFIG_COAP)) {
-		coap_block_init(client, from);
+	//if (IS_ENABLED(CONFIG_COAP)) {
+//		coap_block_init(client, from);
 		/* Set socket timeout, if configured */
-		err = socket_timeout_set(client->fd);
+		/*err = socket_timeout_set(client->fd);
 		if (err) {
 			return err;
-		}
-	}
+		}*/
+//	}
 
 	err = request_send(client);
 	if (err) {
