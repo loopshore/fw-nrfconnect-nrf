@@ -46,7 +46,7 @@ static const char *str_family(int family)
 	}
 }
 
-static int socket_timeout_set(int fd)
+/*static int socket_timeout_set(int fd)
 {
 	int err;
 
@@ -70,7 +70,7 @@ static int socket_timeout_set(int fd)
 	}
 
 	return 0;
-}
+}*/
 
 static int socket_tls_hostname_set(int fd, const char *host) {
 	if (host) {
