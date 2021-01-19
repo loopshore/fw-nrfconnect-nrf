@@ -53,7 +53,7 @@ manifest:
     - name: zephyr
       remote: loopshore
       repo-path: sdk-zephyr
-      revision: 30be17e56e79b261221f1ab5c17891278fe50b1f
+      revision: 16b54ac7f7cdca57fad9f5c7055516364a3fa494
       import:
         # In addition to the zephyr repository itself, NCS also
         # imports the contents of zephyr/west.yml at the above
